@@ -1,6 +1,6 @@
 {
-  "name": "no-name",
   "license": "UNLICENSED",
+  "name": "no-name",
   "dependencies": {
     "@polymer/iron-a11y-announcer": "3.0.2",
     "@polymer/iron-a11y-keys-behavior": "3.0.1",
@@ -66,10 +66,13 @@
     "@webcomponents/shadycss": "1.8.0",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "construct-style-sheets-polyfill": "3.0.4",
+    "line-awesome": "1.3.0",
     "lit-element": "2.5.1",
-    "lit-html": "1.4.1"
+    "lit-html": "1.4.1",
+    "lumo-css-framework": "^4.0.10"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "babel-loader": "8.2.2",
     "chokidar": "^3.5.0",
     "compression-webpack-plugin": "4.0.1",
@@ -81,6 +84,8 @@
     "html-webpack-plugin": "4.5.2",
     "lit-css-loader": "0.0.4",
     "raw-loader": "3.1.0",
+    "rollup-plugin-lit-css": "^2.1.0",
+    "rollup-plugin-styles": "^3.14.1",
     "ts-loader": "8.0.12",
     "typescript": "4.0.3",
     "webpack": "4.42.0",
@@ -155,8 +160,10 @@
       "@webcomponents/shadycss": "1.8.0",
       "@webcomponents/webcomponentsjs": "^2.2.10",
       "construct-style-sheets-polyfill": "3.0.4",
+      "line-awesome": "1.3.0",
       "lit-element": "2.5.1",
-      "lit-html": "1.4.1"
+      "lit-html": "1.4.1",
+      "lumo-css-framework": "^4.0.10"
     },
     "devDependencies": {
       "babel-loader": "8.2.2",
@@ -178,6 +185,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "d658502e342d221a901266348d5c7ef9cce9f6c215b3416d22cbb2defa2f59ec"
+    "hash": "f295bfdefa0e6f033c0246f630a133e07c92664fae4bb437e63b7822566410f8"
   }
 }

@@ -1,32 +1,29 @@
 package com.example.application.data.generator;
 
-import java.time.LocalDateTime;
-import java.util.Random;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.example.application.data.entity.Company;
-import com.example.application.data.entity.Contact;
-import com.example.application.data.entity.Status;
-import com.example.application.data.repository.CompanyRepository;
-import com.example.application.data.repository.ContactRepository;
-import com.example.application.data.repository.StatusRepository;
+import com.example.application.data.entity.*;
+import com.example.application.data.repository.*;
+import com.vaadin.exampledata.DataType;
+import com.vaadin.exampledata.ExampleDataGenerator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import com.vaadin.exampledata.DataType;
-import com.vaadin.exampledata.ExampleDataGenerator;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SpringComponent
 public class DataGenerator {
 
     @Bean
     public CommandLineRunner loadData(ContactRepository contactRepository, CompanyRepository companyRepository,
-            StatusRepository statusRepository) {
+                                      StatusRepository statusRepository, AlimentoRepository alimentoRepository,
+                                      IngestaRepository ingestaRepository) {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
@@ -61,6 +58,27 @@ public class DataGenerator {
             }).collect(Collectors.toList());
 
             contactRepository.saveAll(contacts);
+
+            List<Alimento> alimentos = alimentoRepository
+                    .saveAll(Arrays.asList(new Alimento("Pan", 20),
+                            new Alimento("Leche", 200),
+                            new Alimento("Verdura", 100),
+                            new Alimento("Cerveza", 200),
+                            new Alimento("Acompañamiento", 100))
+                    );
+
+//            List<Ingesta> ingestas = ingestaRepository
+//                    .saveAll(Stream.of("Pan", "Leche", "Verdura", "Cerveza", "Acompañamiento")
+//                            .map(Alimento::new).map(Ingesta::new).collect(Collectors.toList()));
+
+            List<Ingesta> ingestas = ingestaRepository
+                    .saveAll(Stream.
+                            generate(() -> alimentos.get(new Random().nextInt(alimentos.size()))).
+//                            generate(Ingesta::new).
+                            limit(10).
+                            map(a -> new Ingesta(a, 1)).
+                            collect(Collectors.toList()));
+
 
             logger.info("Generated demo data");
         };
