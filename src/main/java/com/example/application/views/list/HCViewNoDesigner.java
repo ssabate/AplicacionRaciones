@@ -10,6 +10,8 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
@@ -28,7 +30,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
 
     private ComboBox<TipoComida> tipoComida;
     private ComboBox<Alimento> alimento;
-    private IntegerField racions;
+    private NumberField racions;
     private IntegerField grams;
     CrmService service;
     private Grid<Ingesta> consumido= new Grid<Ingesta>(Ingesta.class);
@@ -64,20 +66,37 @@ public class HCViewNoDesigner  extends VerticalLayout{
     }
 
     private void configureCampsNumerics() {
-        racions = new IntegerField("Raciones:");
-        racions.setValue(1);
+        racions = new NumberField("Raciones:");
+        racions.setValue(1.0);
+        racions.setStep(0.5);
         racions.setHasControls(true);
-        racions.setMin(0);
-        racions.setMax(85);
+        racions.setMin(0.5);
+        racions.setMax(8.5);
+        racions.setValueChangeMode(ValueChangeMode.LAZY);
+
+        racions.addValueChangeListener(
+                e -> {
+                    grams.setValue(Double.valueOf(e.getValue()*grPerRacio).intValue());
+
+                }
+        );
 
 
         grams = new IntegerField("Gramos:");
         grams.setValue(1);
+        grams.setStep(5);
         grams.setHasControls(true);
         grams.setMin(0);
         Div gramSufix = new Div();
         gramSufix.setText("gr");
         grams.setSuffixComponent(gramSufix);
+        grams.setValueChangeMode(ValueChangeMode.LAZY);
+
+        grams.addValueChangeListener(
+                e -> {
+                    racions.setValue((double)e.getValue()/grPerRacio);
+                }
+        );
 
         //desactivem els camps numèrics mentre no tinguem aliment seleccionat
         activaCampsNumerics(false);
@@ -88,6 +107,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
         tipoComida=new ComboBox<>("Horario de la comida");
         tipoComida.setPlaceholder("Elige una comida...");
         tipoComida.setItems(TipoComida.values());
+        tipoComida.setValue(TipoComida.values()[0]);
         tipoComida.setItemLabelGenerator(t -> t.name());
 
         alimento=new ComboBox<>("Alimento");
@@ -98,7 +118,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
                 e -> {
                     activaCampsNumerics(true);
                     grPerRacio=service.findAlimentoByNombre(e.getValue().getNombre()).getGrRacion();
-                    grams.setValue(racions.getValue()*grPerRacio);
+                    grams.setValue(Double.valueOf(racions.getValue()*grPerRacio).intValue());
                 }
 
         );
