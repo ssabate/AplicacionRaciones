@@ -4,6 +4,8 @@ import com.example.application.data.entity.Alimento;
 import com.example.application.data.entity.Ingesta;
 import com.example.application.data.entity.TipoComida;
 import com.example.application.data.service.CrmService;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -28,15 +30,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "demo")
 public class HCViewNoDesigner  extends VerticalLayout{
 
+    //Components visuals
     private ComboBox<TipoComida> tipoComida;
     private ComboBox<Alimento> alimento;
     private NumberField racions;
     private IntegerField grams;
-    CrmService service;
     private Grid<Ingesta> consumido= new Grid<Ingesta>(Ingesta.class);
+    private Button afegir;
+    private Button modificar;
+    private Button eliminar;
+    private Button resetejar;
 
+    private void configureBotons() {
+        afegir = new Button("Añadir");
+        afegir.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        afegir.setEnabled(false);
+
+        modificar = new Button("Modificar");
+        modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        modificar.setEnabled(false);
+
+        eliminar = new Button("Eliminar");
+        eliminar.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+        eliminar.setEnabled(false);
+    }
+
+
+    //Variables útils
     private int grPerRacio;
 
+    //Servei d'accés a dades
+    CrmService service;
 
     /**
      * Creates a new HcView.
@@ -46,24 +70,34 @@ public class HCViewNoDesigner  extends VerticalLayout{
         this.service=service;
 
         //Primera línia en tipo comida, aliment, racions/grams
-        HorizontalLayout hl=new HorizontalLayout();
-        hl.setWidthFull();
+        HorizontalLayout hl1=new HorizontalLayout();
+        hl1.setWidthFull();
         configureCombos();
         configureCampsNumerics();
 
-        hl.add(tipoComida, alimento, racions, grams);
+        hl1.add(tipoComida, alimento, racions, grams);
 
+        //Segona línia en grid i botons CRUD
+        HorizontalLayout hl2=new HorizontalLayout();
+        hl2.setSizeFull();
 
         configureGrid();
 
-//        alimento.setItems(service.findAllAlimentos().stream().map(a -> a.getNombre()));
+        //Botons en vertical
+        VerticalLayout vl1=new VerticalLayout();
+        vl1.setHeightFull();
+
+        configureBotons();
+        vl1.add(afegir,modificar,eliminar);
+
+        hl2.add(consumido, vl1);
 
 
-
-        add(hl, consumido);
+        add(hl1, hl2);
 
         setSizeFull();
     }
+
 
     private void configureCampsNumerics() {
         racions = new NumberField("Raciones:");
@@ -117,6 +151,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
         alimento.addValueChangeListener(
                 e -> {
                     activaCampsNumerics(true);
+                    afegir.setEnabled(true);
                     grPerRacio=service.findAlimentoByNombre(e.getValue().getNombre()).getGrRacion();
                     grams.setValue(Double.valueOf(racions.getValue()*grPerRacio).intValue());
                 }
@@ -138,6 +173,20 @@ public class HCViewNoDesigner  extends VerticalLayout{
         consumido.setColumns("alimento", "raciones");
         consumido.getColumns().forEach(col -> col.setAutoWidth(true));
         consumido.setItems(service.findAllIngestas());
+        consumido.setSelectionMode(Grid.SelectionMode.SINGLE);
+        consumido.addSelectionListener(
+                e -> {
+                    boolean b=e.getAllSelectedItems().size() == 0 ? activarBotons(false): activarBotons(true);
+                }
+        );
+
     }
+
+    private boolean activarBotons(boolean b) {
+        eliminar.setEnabled(b);
+        modificar.setEnabled(b);
+        return true;
+    }
+
 
 }
