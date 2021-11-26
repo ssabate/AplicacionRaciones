@@ -33,7 +33,7 @@ jobs:
           #Set artifact name
           name: artifact
           #From this path
-          path: target/data-0.0.1-SNAPSHOT.jar
+          path: target/flowcrmtutorial-1.0-SNAPSHOT.jar
           #Deploy's job
   deploy:
     #Depends on build's job
@@ -58,5 +58,7 @@ jobs:
           application_name: spring-boot-deploy
           environment_name: Springbootdeploy-env
           version_label: ${{github.SHA}}
-          region: us-east-1
-          deployment_package: data-0.0.1-SNAPSHOT.jar
+          region: eu-west-3
+          deployment_package: flowcrmtutorial-1.0-SNAPSHOT.jar
+
+
