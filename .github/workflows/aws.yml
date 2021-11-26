@@ -58,5 +58,5 @@ jobs:
           application_name: spring-boot-deploy
           environment_name: Springbootdeploy-env
           version_label: ${{github.SHA}}
-          region: eu-west-3 
-          deployment_package: flowcrmtutorial-1.0-SNAPSHOT.jar  
+          region: eu-west-3
+          deployment_package: flowcrmtutorial-1.0-SNAPSHOT.jar
