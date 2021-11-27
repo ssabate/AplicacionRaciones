@@ -7,6 +7,7 @@ import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -36,6 +37,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
     private NumberField racions;
     private IntegerField grams;
     private Grid<Ingesta> consumido= new Grid<Ingesta>(Ingesta.class);
+    private DatePicker datePicker = new DatePicker("Fecha:");
     private Button afegir;
     private Button modificar;
     private Button eliminar;
@@ -75,7 +77,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
         configureCombos();
         configureCampsNumerics();
 
-        hl1.add(tipoComida, alimento, racions, grams);
+        hl1.add(tipoComida, alimento, racions, grams, datePicker);
 
         //Segona línia en grid i botons CRUD
         HorizontalLayout hl2=new HorizontalLayout();
@@ -142,7 +144,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
         tipoComida.setPlaceholder("Elige una comida...");
         tipoComida.setItems(TipoComida.values());
         tipoComida.setValue(TipoComida.values()[0]);
-        tipoComida.setItemLabelGenerator(t -> t.name());
+        tipoComida.setItemLabelGenerator(t -> t.getName());
 
         alimento=new ComboBox<>("Alimento");
         alimento.setPlaceholder("Elige un alimento...");

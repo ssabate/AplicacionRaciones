@@ -4,18 +4,32 @@ import com.example.application.data.AbstractEntity;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
+//Como hacer la clave compuesta
+//https://vladmihalcea.com/the-best-way-to-map-a-composite-primary-key-with-jpa-and-hibernate/
 @Entity
 @Data
 public class Ingesta extends AbstractEntity {
+
+
+//    @NotNull
+    private LocalDate date;
+
+//    @NotNull
+    @Enumerated(EnumType.STRING)
+    private TipoComida comida;
 
     @NotNull
     @ManyToOne
     private Alimento alimento;
 
-//    @NotEmpty
+
+    //    @NotEmpty
     private int raciones;
 
     public Ingesta() {
@@ -25,6 +39,13 @@ public class Ingesta extends AbstractEntity {
     }
 
     public Ingesta(Alimento alimento, int raciones) {
+        this.alimento = alimento;
+        this.raciones = raciones;
+    }
+
+    public Ingesta(LocalDate date, TipoComida comida, Alimento alimento, int raciones) {
+        this.date = date;
+        this.comida = comida;
         this.alimento = alimento;
         this.raciones = raciones;
     }

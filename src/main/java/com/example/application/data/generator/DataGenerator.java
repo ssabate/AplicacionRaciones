@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -64,7 +65,8 @@ public class DataGenerator {
                             new Alimento("Leche", 200),
                             new Alimento("Verdura", 100),
                             new Alimento("Cerveza", 200),
-                            new Alimento("Acompañamiento", 100))
+                            new Alimento("Acompañamiento", 100),
+                            new Alimento("Otros", 1))
                     );
 
 //            List<Ingesta> ingestas = ingestaRepository
@@ -76,7 +78,7 @@ public class DataGenerator {
                             generate(() -> alimentos.get(new Random().nextInt(alimentos.size()))).
 //                            generate(Ingesta::new).
                             limit(10).
-                            map(a -> new Ingesta(a, 1)).
+                            map(a -> new Ingesta(LocalDate.now(),TipoComida.COMIDA, a, 1)).
                             collect(Collectors.toList()));
 
 
