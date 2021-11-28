@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Theme(themeFolder = "flowcrmtutorial")
 @PageTitle("Contacts | Vaadin CRM")
-@Route(value = "")
+@Route(value = "contacts")
 public class ListView extends VerticalLayout {
     Grid<Contact> grid = new Grid<>(Contact.class);
     TextField filterText = new TextField();

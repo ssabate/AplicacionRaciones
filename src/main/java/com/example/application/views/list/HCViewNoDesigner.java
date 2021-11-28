@@ -7,7 +7,6 @@ import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -20,6 +19,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
+
 /**
  * A Designer generated component for the hc-view template.
  *
@@ -27,36 +28,23 @@ import org.springframework.beans.factory.annotation.Autowired;
  * does not overwrite or otherwise change this file.
  */
 @Theme(themeFolder = "flowcrmtutorial")
-@PageTitle("Contacts | Vaadin CRM")
-@Route(value = "demo")
+@PageTitle("Raciones | Vaadin CRM")
+@Route(value = "ingesta")
 public class HCViewNoDesigner  extends VerticalLayout{
 
     //Components visuals
-    private ComboBox<TipoComida> tipoComida;
     private ComboBox<Alimento> alimento;
     private NumberField racions;
     private IntegerField grams;
     private Grid<Ingesta> consumido= new Grid<Ingesta>(Ingesta.class);
-    private DatePicker datePicker = new DatePicker("Fecha:");
     private Button afegir;
     private Button modificar;
     private Button eliminar;
     private Button resetejar;
 
-    private void configureBotons() {
-        afegir = new Button("Añadir");
-        afegir.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        afegir.setEnabled(false);
-
-        modificar = new Button("Modificar");
-        modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        modificar.setEnabled(false);
-
-        eliminar = new Button("Eliminar");
-        eliminar.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
-        eliminar.setEnabled(false);
-    }
-
+    //Valores recibidos de la clase RCMainView
+    private LocalDate fecha;
+    private TipoComida tipoComida;
 
     //Variables útils
     private int grPerRacio;
@@ -68,8 +56,10 @@ public class HCViewNoDesigner  extends VerticalLayout{
      * Creates a new HcView.
      */
     @Autowired
-    public HCViewNoDesigner(CrmService service) {
+    public HCViewNoDesigner(CrmService service, LocalDate fecha, TipoComida tipoComida) {
         this.service=service;
+        this.fecha=fecha;
+        this.tipoComida=tipoComida;
 
         //Primera línia en tipo comida, aliment, racions/grams
         HorizontalLayout hl1=new HorizontalLayout();
@@ -77,7 +67,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
         configureCombos();
         configureCampsNumerics();
 
-        hl1.add(tipoComida, alimento, racions, grams, datePicker);
+        hl1.add(alimento, racions, grams);
 
         //Segona línia en grid i botons CRUD
         HorizontalLayout hl2=new HorizontalLayout();
@@ -140,11 +130,6 @@ public class HCViewNoDesigner  extends VerticalLayout{
     }
 
     private void configureCombos() {
-        tipoComida=new ComboBox<>("Horario de la comida");
-        tipoComida.setPlaceholder("Elige una comida...");
-        tipoComida.setItems(TipoComida.values());
-        tipoComida.setValue(TipoComida.values()[0]);
-        tipoComida.setItemLabelGenerator(t -> t.getName());
 
         alimento=new ComboBox<>("Alimento");
         alimento.setPlaceholder("Elige un alimento...");
@@ -159,7 +144,6 @@ public class HCViewNoDesigner  extends VerticalLayout{
                 }
 
         );
-//        add(tipoComida);
     }
 
     private void activaCampsNumerics(boolean b) {
@@ -174,7 +158,13 @@ public class HCViewNoDesigner  extends VerticalLayout{
         consumido.addColumn(ingesta -> ingesta.getAlimento().getNombre()).setHeader("Alimento");
         consumido.setColumns("alimento", "raciones");
         consumido.getColumns().forEach(col -> col.setAutoWidth(true));
-        consumido.setItems(service.findAllIngestas());
+        consumido.setDataProvider(service.new IngestaDataProvider());
+
+
+
+
+
+        //        consumido.setItems(service.findIngestasByDateTipoComida(fecha, tipoComida));
         consumido.setSelectionMode(Grid.SelectionMode.SINGLE);
         consumido.addSelectionListener(
                 e -> {
@@ -189,6 +179,29 @@ public class HCViewNoDesigner  extends VerticalLayout{
         modificar.setEnabled(b);
         return true;
     }
+
+    private void configureBotons() {
+        afegir = new Button("Añadir");
+        afegir.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        afegir.setEnabled(false);
+
+        afegir.addClickListener(
+                e -> {
+                    Ingesta ing=new Ingesta(fecha, tipoComida, alimento.getValue(), racions.getValue().intValue());
+                    service.insertarIngesta(ing);
+                    consumido.getDataProvider().refreshAll();
+                }
+        );
+
+        modificar = new Button("Modificar");
+        modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        modificar.setEnabled(false);
+
+        eliminar = new Button("Eliminar");
+        eliminar.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+        eliminar.setEnabled(false);
+    }
+
 
 
 }
