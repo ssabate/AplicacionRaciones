@@ -217,6 +217,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
                 e -> {
                     Ingesta ing=new Ingesta(fecha, tipoComida, alimento.getValue(), racions.getValue().intValue());
                     service.insertarIngesta(ing);
+//                    consumido.getDataProvider().refreshItem(ing);
                     consumido.getDataProvider().refreshAll();
                 }
         );
@@ -230,7 +231,9 @@ public class HCViewNoDesigner  extends VerticalLayout{
         eliminar.setEnabled(false);
         eliminar.addClickListener(
                 e -> {
-                    service.eliminarIngesta(consumido.getSelectedItems().stream().findFirst());
+                    Optional<Ingesta> eliminado=consumido.getSelectedItems().stream().findFirst();
+                    service.eliminarIngesta(eliminado);
+//                    consumido.getDataProvider().refreshItem(eliminado.get());
                     consumido.getDataProvider().refreshAll();
                 }
         );

@@ -56,8 +56,8 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
           use_existing_version_if_available: true
-          application_name: spring-boot-deploy
-          environment_name: Springbootdeploy-env
+          application_name: spring-boot-deploy-def
+          environment_name: Springbootdeploydef-env
           version_label: ${{github.SHA}}
           region: eu-west-3
           deployment_package: flowcrmtutorial-1.0-SNAPSHOT.jar
