@@ -232,7 +232,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
         eliminar.addClickListener(
                 e -> {
                     Optional<Ingesta> eliminado=consumido.getSelectedItems().stream().findFirst();
-//                    service.eliminarIngesta(eliminado);
+                    service.eliminarIngesta(eliminado);
 //                    consumido.getDataProvider().refreshItem(eliminado.get());
                     consumido.getDataProvider().refreshAll();
                 }
