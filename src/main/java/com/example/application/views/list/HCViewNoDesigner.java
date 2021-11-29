@@ -3,6 +3,7 @@ package com.example.application.views.list;
 import com.example.application.data.entity.Alimento;
 import com.example.application.data.entity.Ingesta;
 import com.example.application.data.entity.TipoComida;
+import com.example.application.data.filter.IngestaFiltro;
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -13,6 +14,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -20,6 +23,7 @@ import com.vaadin.flow.theme.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * A Designer generated component for the hc-view template.
@@ -158,9 +162,33 @@ public class HCViewNoDesigner  extends VerticalLayout{
         consumido.addColumn(ingesta -> ingesta.getAlimento().getNombre()).setHeader("Alimento");
         consumido.setColumns("alimento", "raciones");
         consumido.getColumns().forEach(col -> col.setAutoWidth(true));
-        consumido.setDataProvider(service.new IngestaDataProvider());
+//        consumido.setDataProvider(service.new IngestaDataProvider());
 
+        IngestaFiltro gridFilter = new IngestaFiltro(fecha, tipoComida);
 
+        DataProvider<Ingesta, IngestaFiltro> dataProvider =
+                DataProvider.fromFilteringCallbacks(
+                        query -> {
+                            Optional<IngestaFiltro> filter = query.getFilter();
+                            return service.fetchIngestas(
+                                    query.getOffset(),
+                                    query.getLimit(),
+                                    filter.map(f -> f.getDate()).orElse(null),
+                                    filter.map(f -> f.getComida()).orElse(null)
+                            );
+                        },
+                        query -> {
+                            Optional<IngestaFiltro> filter = query.getFilter();
+                            return service.getIngestaCount(
+                                    filter.map(f -> f.getDate()).orElse(null),
+                                    filter.map(f -> f.getComida()).orElse(null)
+                            );
+                        }
+                );
+        ConfigurableFilterDataProvider<Ingesta,Void,IngestaFiltro> dp = dataProvider.withConfigurableFilter();
+        dp.setFilter(gridFilter);
+        consumido.setDataProvider(dp);
+//    dp.refreshAll();
 
 
 
@@ -200,6 +228,13 @@ public class HCViewNoDesigner  extends VerticalLayout{
         eliminar = new Button("Eliminar");
         eliminar.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
         eliminar.setEnabled(false);
+        eliminar.addClickListener(
+                e -> {
+                    service.eliminarIngesta(consumido.getSelectedItems().stream().findFirst());
+                    consumido.getDataProvider().refreshAll();
+                }
+        );
+
     }
 
 

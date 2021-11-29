@@ -8,13 +8,13 @@ import com.example.application.data.repository.AlimentoRepository;
 import com.example.application.data.repository.ContactRepository;
 import com.example.application.data.repository.IngestaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -68,21 +68,17 @@ public class CrmService {
      * @return
      */
     public Stream<Ingesta> fetchIngestas(int offset, int limit, LocalDate fecha, TipoComida tipoComida) {
-        return iR.fetchIngestas(offset, limit, fecha, tipoComida).stream();
+        return iR.fetchIngestas( fecha, tipoComida, PageRequest.of(offset, limit)).stream();
     }
 
-    /**
-     * The contents of this method are just for demo purposes and irrelevant for the features that want to be presented.
-     * @param nameFilter
-     * @param lastNameFilter
-     * @return
-     */
-    public int getPersonCount(String nameFilter, String lastNameFilter) {
-        List<Person> result = internalPersonsFullList.stream()
-                .filter(person->person.getName().contains(nameFilter==null?"":nameFilter))
-                .filter(person->person.getLastName().contains(lastNameFilter==null?"":lastNameFilter))
-                .collect(Collectors.toList());
-        return result.size();
+    public int getIngestaCount(LocalDate fecha, TipoComida tipoComida) {
+
+        return iR.findIngestasByDateTipoComida(fecha, tipoComida).size();
+    }
+
+    public void eliminarIngesta(Optional<Ingesta> first) {
+        if(first.isPresent()) iR.delete(first.get());
+        else throw new IllegalStateException();
     }
 
 //    public interface IngestaService {

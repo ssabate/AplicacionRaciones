@@ -28,7 +28,7 @@ public class DataGenerator {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
-            if (contactRepository.count() != 0L) {
+            if (true || contactRepository.count() != 0L) {
                 logger.info("Using existing database");
                 return;
             }

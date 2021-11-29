@@ -19,4 +19,19 @@ public class IngestaFiltro {
         this.comida = comida;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public TipoComida getComida() {
+        return comida;
+    }
+
+    public void setComida(TipoComida comida) {
+        this.comida = comida;
+    }
 }
