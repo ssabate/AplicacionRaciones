@@ -209,6 +209,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
     }
 
     private void configureBotons() {
+        //Botón de añadir alimento a la ingesta (se puede mejorar fusionando el alimento si ya está introducido en la comida)
         afegir = new Button("Añadir");
         afegir.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         afegir.setEnabled(false);
@@ -222,10 +223,13 @@ public class HCViewNoDesigner  extends VerticalLayout{
                 }
         );
 
+        //Botón de modificar alimento. No se activa si no hay alimento seleccionado en el grid. Cuando lo aprieten cambiará los valores
+        //actuales por los de los diferentes componentes
         modificar = new Button("Modificar");
         modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         modificar.setEnabled(false);
 
+        //Botón de eliminar alimento. No se activa si no hay alimneto seleccionado en el grid
         eliminar = new Button("Eliminar");
         eliminar.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
         eliminar.setEnabled(false);
