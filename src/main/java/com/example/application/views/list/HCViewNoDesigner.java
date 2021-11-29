@@ -233,7 +233,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
                 e -> {
                     Optional<Ingesta> eliminado=consumido.getSelectedItems().stream().findFirst();
                     service.eliminarIngesta(eliminado);
-//                    consumido.getDataProvider().refreshItem(eliminado.get());
+                    consumido.getDataProvider().refreshItem(eliminado.get());
                     consumido.getDataProvider().refreshAll();
                 }
         );
