@@ -216,7 +216,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
 
         afegir.addClickListener(
                 e -> {
-                    Ingesta ing=new Ingesta(fecha, tipoComida, alimento.getValue(), racions.getValue().intValue());
+                    Ingesta ing=new Ingesta(fecha, tipoComida, alimento.getValue(), racions.getValue().doubleValue());
                     service.insertarIngesta(ing);
 //                    consumido.getDataProvider().refreshItem(ing);
                     consumido.getDataProvider().refreshAll();

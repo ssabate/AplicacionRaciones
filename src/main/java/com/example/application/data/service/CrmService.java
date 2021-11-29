@@ -56,7 +56,12 @@ public class CrmService {
     }
 
     public void insertarIngesta(Ingesta ing) {
-        iR.save(ing);
+        Optional<Ingesta> repe=iR.findIngestasByDateTipoComidaAlimento(ing.getDate(), ing.getComida(), ing.getAlimento());
+        if(repe.isPresent()){
+            repe.get().setRaciones(repe.get().getRaciones()+ing.getRaciones());
+            iR.save(repe.get());
+        }
+        else iR.save(ing);
     }
 
     /**
