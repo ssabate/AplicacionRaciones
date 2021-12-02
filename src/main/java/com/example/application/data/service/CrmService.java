@@ -86,6 +86,18 @@ public class CrmService {
         else throw new IllegalStateException();
     }
 
+    public void modificarIngesta(Optional<Ingesta> modificado, Alimento alimento, Double raciones) {
+        if(modificado.isPresent()){
+            modificado.get().setAlimento(alimento);
+            modificado.get().setRaciones(raciones);
+            iR.save(modificado.get());
+        }
+    }
+
+    public double totalRaciones(LocalDate fecha, TipoComida tipoComida) {
+        return iR.totalRaciones(fecha, tipoComida);
+    }
+
 //    public interface IngestaService {
 //        List<Ingesta> fetchIngestas(int offset, int limit);
 //        int getIngestaCount();

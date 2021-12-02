@@ -37,4 +37,12 @@ public interface IngestaRepository extends JpaRepository<Ingesta, Integer> {
             @Param("searchDate")LocalDate date,
             @Param("searchTipo")TipoComida comida,
             @Param("searchAlim") Alimento alimento);
+
+    @Query("select sum(c.raciones) from Ingesta c " +
+            "where c.date = :searchDate " +
+            "and c.comida = :searchTipo ")
+    double totalRaciones(
+            @Param("searchDate")LocalDate date,
+            @Param("searchTipo")TipoComida comida
+            );
 }
