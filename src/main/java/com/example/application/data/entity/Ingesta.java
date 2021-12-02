@@ -30,7 +30,7 @@ public class Ingesta extends AbstractEntity {
 
 
     //    @NotEmpty
-    private int raciones;
+    private double raciones;
 
     public Ingesta() {
     }
@@ -38,15 +38,14 @@ public class Ingesta extends AbstractEntity {
         this.alimento = alimento;
     }
 
-    public Ingesta(Alimento alimento, int raciones) {
+    public Ingesta(Alimento alimento, double raciones) {
         this.alimento = alimento;
         this.raciones = raciones;
     }
 
-    public Ingesta(LocalDate date, TipoComida comida, Alimento alimento, int raciones) {
+    public Ingesta(LocalDate date, TipoComida comida, Alimento alimento, double raciones) {
+        this(alimento, raciones);
         this.date = date;
         this.comida = comida;
-        this.alimento = alimento;
-        this.raciones = raciones;
     }
 }

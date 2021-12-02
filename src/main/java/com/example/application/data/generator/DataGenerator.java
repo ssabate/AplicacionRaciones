@@ -28,6 +28,7 @@ public class DataGenerator {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
+//            if (contactRepository.count() != 0L) {
             if (true || contactRepository.count() != 0L) {
                 logger.info("Using existing database");
                 return;
@@ -78,7 +79,7 @@ public class DataGenerator {
                             generate(() -> alimentos.get(new Random().nextInt(alimentos.size()))).
 //                            generate(Ingesta::new).
                             limit(10).
-                            map(a -> new Ingesta(LocalDate.now(),TipoComida.COMIDA, a, 1)).
+                            map(a -> new Ingesta(LocalDate.now(),TipoComida.COMIDA, a, 1.0)).
                             collect(Collectors.toList()));
 
 

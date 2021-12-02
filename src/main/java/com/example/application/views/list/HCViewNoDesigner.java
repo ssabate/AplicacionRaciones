@@ -143,6 +143,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
                 e -> {
                     activaCampsNumerics(true);
                     afegir.setEnabled(true);
+                    if(consumido.getSelectedItems().size()!=0) modificar.setEnabled(true);
                     grPerRacio=service.findAlimentoByNombre(e.getValue().getNombre()).getGrRacion();
                     grams.setValue(Double.valueOf(racions.getValue()*grPerRacio).intValue());
                 }
@@ -162,6 +163,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
         consumido.addColumn(ingesta -> ingesta.getAlimento().getNombre()).setHeader("Alimento");
         consumido.setColumns("alimento", "raciones");
         consumido.getColumns().forEach(col -> col.setAutoWidth(true));
+        consumido.getColumns().get(1).setFooter("Total raciones: "+service.totalRaciones(fecha, tipoComida));
 //        consumido.setDataProvider(service.new IngestaDataProvider());
 
         IngestaFiltro gridFilter = new IngestaFiltro(fecha, tipoComida);
@@ -187,6 +189,13 @@ public class HCViewNoDesigner  extends VerticalLayout{
                 );
         ConfigurableFilterDataProvider<Ingesta,Void,IngestaFiltro> dp = dataProvider.withConfigurableFilter();
         dp.setFilter(gridFilter);
+
+        //Para actualizar eltotal de raciones a cada cambio en el grid
+        dp.addDataProviderListener(changeEvent -> {
+            consumido.getColumns().get(1).setFooter("Total raciones: "+service.totalRaciones(fecha, tipoComida));
+        });
+
+
         consumido.setDataProvider(dp);
 //    dp.refreshAll();
 
@@ -196,7 +205,13 @@ public class HCViewNoDesigner  extends VerticalLayout{
         consumido.setSelectionMode(Grid.SelectionMode.SINGLE);
         consumido.addSelectionListener(
                 e -> {
+                    if(e.getAllSelectedItems().size() != 0){
+                        if(alimento.getValue()!=null) modificar.setEnabled(true);
+                        eliminar.setEnabled(true);
+                    }
+                    else{
                     boolean b=e.getAllSelectedItems().size() == 0 ? activarBotons(false): activarBotons(true);
+                    }
                 }
         );
 
@@ -216,7 +231,7 @@ public class HCViewNoDesigner  extends VerticalLayout{
 
         afegir.addClickListener(
                 e -> {
-                    Ingesta ing=new Ingesta(fecha, tipoComida, alimento.getValue(), racions.getValue().intValue());
+                    Ingesta ing=new Ingesta(fecha, tipoComida, alimento.getValue(), racions.getValue().doubleValue());
                     service.insertarIngesta(ing);
 //                    consumido.getDataProvider().refreshItem(ing);
                     consumido.getDataProvider().refreshAll();
@@ -228,6 +243,14 @@ public class HCViewNoDesigner  extends VerticalLayout{
         modificar = new Button("Modificar");
         modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         modificar.setEnabled(false);
+        modificar.addClickListener(
+                e -> {
+                    Optional<Ingesta> modificado=consumido.getSelectedItems().stream().findFirst();
+                    service.modificarIngesta(modificado, alimento.getValue(), racions.getValue());
+//                    consumido.getDataProvider().refreshItem(modificado.get());
+                    consumido.getDataProvider().refreshAll();
+                }
+        );
 
         //Botón de eliminar alimento. No se activa si no hay alimneto seleccionado en el grid
         eliminar = new Button("Eliminar");

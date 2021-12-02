@@ -1,5 +1,6 @@
 package com.example.application.data.repository;
 
+import com.example.application.data.entity.Alimento;
 import com.example.application.data.entity.Ingesta;
 import com.example.application.data.entity.TipoComida;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IngestaRepository extends JpaRepository<Ingesta, Integer> {
@@ -26,4 +28,21 @@ public interface IngestaRepository extends JpaRepository<Ingesta, Integer> {
             "where c.date = :searchDate " +
             "and c.comida = :searchTipo ")
     Page<Ingesta> fetchIngestas(@Param("searchDate") LocalDate fecha, @Param("searchTipo") TipoComida tipoComida, Pageable pr);
+
+    @Query("select c from Ingesta c " +
+            "where c.date = :searchDate " +
+            "and c.comida = :searchTipo " +
+            "and c.alimento = :searchAlim")
+    Optional<Ingesta> findIngestasByDateTipoComidaAlimento(
+            @Param("searchDate")LocalDate date,
+            @Param("searchTipo")TipoComida comida,
+            @Param("searchAlim") Alimento alimento);
+
+    @Query("select sum(c.raciones) from Ingesta c " +
+            "where c.date = :searchDate " +
+            "and c.comida = :searchTipo ")
+    double totalRaciones(
+            @Param("searchDate")LocalDate date,
+            @Param("searchTipo")TipoComida comida
+            );
 }

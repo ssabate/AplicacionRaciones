@@ -56,7 +56,12 @@ public class CrmService {
     }
 
     public void insertarIngesta(Ingesta ing) {
-        iR.save(ing);
+        Optional<Ingesta> repe=iR.findIngestasByDateTipoComidaAlimento(ing.getDate(), ing.getComida(), ing.getAlimento());
+        if(repe.isPresent()){
+            repe.get().setRaciones(repe.get().getRaciones()+ing.getRaciones());
+            iR.save(repe.get());
+        }
+        else iR.save(ing);
     }
 
     /**
@@ -79,6 +84,18 @@ public class CrmService {
     public void eliminarIngesta(Optional<Ingesta> first) {
         if(first.isPresent()) iR.delete(first.get());
         else throw new IllegalStateException();
+    }
+
+    public void modificarIngesta(Optional<Ingesta> modificado, Alimento alimento, Double raciones) {
+        if(modificado.isPresent()){
+            modificado.get().setAlimento(alimento);
+            modificado.get().setRaciones(raciones);
+            iR.save(modificado.get());
+        }
+    }
+
+    public double totalRaciones(LocalDate fecha, TipoComida tipoComida) {
+        return iR.totalRaciones(fecha, tipoComida);
     }
 
 //    public interface IngestaService {
