@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
+@Transactional          //añadida para poder borrar todos los alimentos de una ingesta
 public class CrmService {
 
     private ContactRepository cR;
@@ -76,16 +78,18 @@ public class CrmService {
         return iR.fetchIngestas( fecha, tipoComida, PageRequest.of(offset, limit)).stream();
     }
 
+    //devuelve la cantidad de alimentos existente en una ingesta, señalada con la fecha y tipo de alimento
     public int getIngestaCount(LocalDate fecha, TipoComida tipoComida) {
-
         return iR.findIngestasByDateTipoComida(fecha, tipoComida).size();
     }
 
+    //elimina la ingesta que recibe
     public void eliminarIngesta(Optional<Ingesta> first) {
         if(first.isPresent()) iR.delete(first.get());
         else throw new IllegalStateException();
     }
 
+    //Modifica el alimento y cantidad de raciones de la ingesta que recibe
     public void modificarIngesta(Optional<Ingesta> modificado, Alimento alimento, Double raciones) {
         if(modificado.isPresent()){
             modificado.get().setAlimento(alimento);
@@ -94,9 +98,17 @@ public class CrmService {
         }
     }
 
+    //Devuelve la suma de las raciones de HCs consumidas en una ingesta
     public double totalRaciones(LocalDate fecha, TipoComida tipoComida) {
-        return iR.totalRaciones(fecha, tipoComida);
+        if(iR.totalRaciones(fecha, tipoComida).isPresent()) return iR.totalRaciones(fecha, tipoComida).get();
+        return 0.0;
     }
+
+    public void eliminarIngestas(LocalDate fecha, TipoComida tipoComida) {
+        iR.deleteByDateAndComida(fecha, tipoComida);
+
+    }
+
 
 //    public interface IngestaService {
 //        List<Ingesta> fetchIngestas(int offset, int limit);

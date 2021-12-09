@@ -6,6 +6,7 @@ import com.example.application.data.entity.TipoComida;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -41,8 +42,12 @@ public interface IngestaRepository extends JpaRepository<Ingesta, Integer> {
     @Query("select sum(c.raciones) from Ingesta c " +
             "where c.date = :searchDate " +
             "and c.comida = :searchTipo ")
-    double totalRaciones(
+    Optional<Double> totalRaciones(
             @Param("searchDate")LocalDate date,
             @Param("searchTipo")TipoComida comida
             );
+
+    @Modifying
+    @Query("delete from Ingesta i where i.date=:date and i.comida=:comida")
+    void deleteByDateAndComida(@Param("date") LocalDate fecha,@Param("comida")  TipoComida comida);
 }

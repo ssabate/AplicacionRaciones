@@ -3,10 +3,7 @@ package com.example.application.data.entity;
 import com.example.application.data.AbstractEntity;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -25,7 +22,7 @@ public class Ingesta extends AbstractEntity {
     private TipoComida comida;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne//(cascade = CascadeType.PERSIST)
     private Alimento alimento;
 
 
