@@ -32,9 +32,10 @@ public class HCMainView extends VerticalLayout{
     private ComboBox<TipoComida> tipoComida;
     private DatePicker datePicker = new DatePicker("Fecha:");
     private Button nueva;
-    
 
+    private Button guardar;  //para volver a la selección de fecha y tipo de comida, guardando la ingesta
 
+    private HCViewNoDesigner ingesta;   //datos de la ingesta
 
 
     //Servei d'accés a dades
@@ -58,7 +59,12 @@ public class HCMainView extends VerticalLayout{
 //        footerLayout.addComponent(userLabel);
 //        hl1.setComponentAlignment(tipoComida, Alignment.R);
         hl1.setAlignItems(Alignment.START);
-        add(hl1, nueva);
+
+        HorizontalLayout hl2=new HorizontalLayout();
+        hl2.setWidthFull();
+        hl2.add(nueva, guardar);
+
+        add(hl1, hl2);
         setSizeFull();
     }
 
@@ -88,7 +94,24 @@ public class HCMainView extends VerticalLayout{
                 e -> {
                     tipoComida.setEnabled(false);
                     datePicker.setEnabled(false);
-                    add(new HCViewNoDesigner(service, datePicker.getValue(), tipoComida.getValue()));
+                    guardar.setEnabled(true);
+                    ingesta=new HCViewNoDesigner(service, datePicker.getValue(), tipoComida.getValue());
+                    add(ingesta);
+                }
+        );
+
+        //Botón de  hacer desaparecer la ingesta actual, y mostrar otra vez la selección de tipo de
+        // comida y fecha, y botón de nueva ingesta
+        guardar = new Button("Guardar");
+        guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        guardar.setEnabled(false);
+        guardar.addClickListener(
+                e -> {
+                    nueva.setEnabled(true);
+                    tipoComida.setEnabled(true);
+                    datePicker.setEnabled(true);
+                    guardar.setEnabled(false);
+                    this.remove(ingesta);
                 }
         );
 

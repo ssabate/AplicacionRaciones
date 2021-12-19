@@ -28,39 +28,40 @@ public class DataGenerator {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
-//            if (contactRepository.count() != 0L) {
-            if (true || contactRepository.count() != 0L) {
+            if (alimentoRepository.count() != 0L) {
+//            if (true || contactRepository.count() != 0L) {
                 logger.info("Using existing database");
                 return;
             }
-            int seed = 123;
+            //int seed = 123;
 
             logger.info("Generating demo data");
-            ExampleDataGenerator<Company> companyGenerator = new ExampleDataGenerator<>(Company.class,
-                    LocalDateTime.now());
-            companyGenerator.setData(Company::setName, DataType.COMPANY_NAME);
-            List<Company> companies = companyRepository.saveAll(companyGenerator.create(5, seed));
-
-            List<Status> statuses = statusRepository
-                    .saveAll(Stream.of("Imported lead", "Not contacted", "Contacted", "Customer", "Closed (lost)")
-                            .map(Status::new).collect(Collectors.toList()));
-
-            logger.info("... generating 50 Contact entities...");
-            ExampleDataGenerator<Contact> contactGenerator = new ExampleDataGenerator<>(Contact.class,
-                    LocalDateTime.now());
-            contactGenerator.setData(Contact::setFirstName, DataType.FIRST_NAME);
-            contactGenerator.setData(Contact::setLastName, DataType.LAST_NAME);
-            contactGenerator.setData(Contact::setEmail, DataType.EMAIL);
-
-            Random r = new Random(seed);
-            List<Contact> contacts = contactGenerator.create(50, seed).stream().map(contact -> {
-                contact.setCompany(companies.get(r.nextInt(companies.size())));
-                contact.setStatus(statuses.get(r.nextInt(statuses.size())));
-                return contact;
-            }).collect(Collectors.toList());
-
-            contactRepository.saveAll(contacts);
-
+//            ExampleDataGenerator<Company> companyGenerator = new ExampleDataGenerator<>(Company.class,
+//                    LocalDateTime.now());
+//            companyGenerator.setData(Company::setName, DataType.COMPANY_NAME);
+//            List<Company> companies = companyRepository.saveAll(companyGenerator.create(5, seed));
+//
+//            List<Status> statuses = statusRepository
+//                    .saveAll(Stream.of("Imported lead", "Not contacted", "Contacted", "Customer", "Closed (lost)")
+//                            .map(Status::new).collect(Collectors.toList()));
+//
+//            logger.info("... generating 50 Contact entities...");
+//            ExampleDataGenerator<Contact> contactGenerator = new ExampleDataGenerator<>(Contact.class,
+//                    LocalDateTime.now());
+//            contactGenerator.setData(Contact::setFirstName, DataType.FIRST_NAME);
+//            contactGenerator.setData(Contact::setLastName, DataType.LAST_NAME);
+//            contactGenerator.setData(Contact::setEmail, DataType.EMAIL);
+//
+//            Random r = new Random(seed);
+//            List<Contact> contacts = contactGenerator.create(50, seed).stream().map(contact -> {
+//                contact.setCompany(companies.get(r.nextInt(companies.size())));
+//                contact.setStatus(statuses.get(r.nextInt(statuses.size())));
+//                return contact;
+//            }).collect(Collectors.toList());
+//
+//            contactRepository.saveAll(contacts);
+            ingestaRepository.deleteAll();
+            alimentoRepository.deleteAll();
             List<Alimento> alimentos = alimentoRepository
                     .saveAll(Arrays.asList(new Alimento("Pan", 20),
                             new Alimento("Leche", 200),
@@ -73,7 +74,6 @@ public class DataGenerator {
 //            List<Ingesta> ingestas = ingestaRepository
 //                    .saveAll(Stream.of("Pan", "Leche", "Verdura", "Cerveza", "Acompañamiento")
 //                            .map(Alimento::new).map(Ingesta::new).collect(Collectors.toList()));
-
             List<Ingesta> ingestas = ingestaRepository
                     .saveAll(Stream.
                             generate(() -> alimentos.get(new Random().nextInt(alimentos.size()))).
