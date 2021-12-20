@@ -8,7 +8,9 @@ import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -48,8 +50,8 @@ public class HCViewNoDesigner  extends VerticalLayout{
     private Button eliminar;                //para eliminar de la ingesta un alimento más raciones consumidas
     private Button resetejar;               //para borrar todos los alimentos consumidos en la ingesta
 
-    private Button registrar;               //para volver a la selección de fecha y tipo de comida, guardando la ingesta
-    private Button cancelar;               //para volver a la selección de fecha y tipo de comida, eliminando la ingesta
+//    private Button registrar;               //para volver a la selección de fecha y tipo de comida, guardando la ingesta
+//    private Button cancelar;               //para volver a la selección de fecha y tipo de comida, eliminando la ingesta
 
     //Valores recibidos de la clase RCMainView
     private LocalDate fecha;
@@ -229,6 +231,12 @@ public class HCViewNoDesigner  extends VerticalLayout{
                     }
                 }
         );
+
+        //Añado un menú contextual al grid
+        GridContextMenu<Ingesta> menu=consumido.addContextMenu();
+        menu.addItem("View", event -> {});
+        menu.addItem("Edit", event -> {});
+        menu.addItem("Delete", event -> {});
 
     }
 
