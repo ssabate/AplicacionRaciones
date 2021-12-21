@@ -2,10 +2,21 @@ package com.example.application.views.list;
 
 import com.example.application.data.entity.TipoComida;
 import com.example.application.data.service.CrmService;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -48,7 +59,8 @@ public class HCMainView extends VerticalLayout{
     public HCMainView(CrmService service) {
         this.service=service;
 
-        //Primera línia en tipo comida, data i botó
+
+        //Primera línia en tipo comida, data i botons
         HorizontalLayout hl1=new HorizontalLayout();
         hl1.setWidthFull();
         configureCombos();
@@ -64,8 +76,45 @@ public class HCMainView extends VerticalLayout{
         hl2.setWidthFull();
         hl2.add(nueva, guardar);
 
-        add(hl1, hl2);
+//        add(menuBox(), hl1, hl2);
+        add(menuBox(), hl1, hl2);
         setSizeFull();
+    }
+
+    private Div menuBox() {
+        Div comp = new Div();
+        MenuBar menuBar = new MenuBar();
+        Text selected = new Text("");
+        ComponentEventListener<ClickEvent<MenuItem>> listener = e -> selected.setText(e.getSource().getText());
+        Div message = new Div(new Text("Clicked item: "), selected);
+
+        menuBar.addItem("View", listener);
+        menuBar.addItem("Edit", listener);
+
+        Image image = new Image("images/3_lines.png", "dummy image");
+        image.setWidth(5, Unit.PERCENTAGE);
+        image.setHeight(10, Unit.PERCENTAGE);
+        menuBar.addItem(image, listener);
+
+        MenuItem share = menuBar.addItem("Share");
+        SubMenu shareSubMenu = share.getSubMenu();
+        MenuItem onSocialMedia = shareSubMenu.addItem("On social media");
+        SubMenu socialMediaSubMenu = onSocialMedia.getSubMenu();
+        socialMediaSubMenu.addItem("Facebook", listener);
+        socialMediaSubMenu.addItem("Twitter", listener);
+        socialMediaSubMenu.addItem("Instagram", listener);
+        shareSubMenu.addItem("By email", listener);
+        shareSubMenu.addItem("Get Link", listener);
+
+        MenuItem move = menuBar.addItem("Move");
+        SubMenu moveSubMenu = move.getSubMenu();
+        moveSubMenu.addItem("To folder", listener);
+        moveSubMenu.addItem("To trash", listener);
+
+        menuBar.addItem("Duplicate", listener);
+
+        comp.add(menuBar, message);
+        return comp;
     }
 
     private void configureFecha() {
@@ -84,7 +133,11 @@ public class HCMainView extends VerticalLayout{
     }
 
     private void configureBotons() {
-        nueva = new Button("Añadir");
+        Image image = new Image("images/3_lines.png", "dummy image");
+        image.setWidth(5, Unit.PERCENTAGE);
+        image.setHeight(10, Unit.PERCENTAGE);
+        Icon ic=new Icon(VaadinIcon.ACCORDION_MENU);
+        nueva = new Button("Añadir", ic );
         nueva.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         nueva.setEnabled(true);
         nueva.setAutofocus(true);
