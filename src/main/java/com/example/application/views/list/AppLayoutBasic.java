@@ -46,8 +46,8 @@ public class AppLayoutBasic extends AppLayout {
         tabs.add(
 //                createTab(VaadinIcon.DASHBOARD, "Ingestas", HCMainView.class),
                 createTab(VaadinIcon.DASHBOARD, "Ingestas", new HCMainView(this.service)),
-                createTab(VaadinIcon.GLASS, "Comidas", new ListView(this.service)),
-                createTab(VaadinIcon.PACKAGE, "Alimentos"),
+                createTab(VaadinIcon.GLASS, "Comidas"),
+                createTab(VaadinIcon.PACKAGE, "Alimentos", new ListView(this.service)),
                 createTab(VaadinIcon.RECORDS, "Informes"),
                 createTab(VaadinIcon.LIST, "Acerca de...")
         );

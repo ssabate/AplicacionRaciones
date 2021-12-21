@@ -37,11 +37,11 @@ public class CrmService {
         return aR.findAll();
     }
 
-    public List<Contact> findAllContacts(String stringFilter) {
+    public List<Alimento> findAllAlimentos(String stringFilter) {
         if (stringFilter == null || stringFilter.isEmpty()) {
-            return cR.findAll();
+            return aR.findAll();
         } else {
-            return cR.search(stringFilter);
+            return aR.search(stringFilter);
         }
     }
 
@@ -107,6 +107,10 @@ public class CrmService {
     public void eliminarIngestas(LocalDate fecha, TipoComida tipoComida) {
         iR.deleteByDateAndComida(fecha, tipoComida);
 
+    }
+
+    public Alimento findAllFoods(String value) {
+        return null;
     }
 
 

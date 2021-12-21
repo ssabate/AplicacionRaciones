@@ -232,12 +232,6 @@ public class HCViewNoDesigner  extends VerticalLayout{
                 }
         );
 
-        //Añado un menú contextual al grid
-        GridContextMenu<Ingesta> menu=consumido.addContextMenu();
-        menu.addItem("View", event -> {});
-        menu.addItem("Edit", event -> {});
-        menu.addItem("Delete", event -> {});
-
     }
 
     private boolean activarBotons(boolean b) {
