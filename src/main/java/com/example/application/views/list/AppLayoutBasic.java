@@ -1,5 +1,6 @@
 package com.example.application.views.list;
 
+import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -12,12 +13,19 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
-@Route("app-layout-basic")
+@Route("")
 // tag::snippet[]
 // De https://vaadin.com/docs/v14/ds/components/app-layout
 public class AppLayoutBasic extends AppLayout {
 
-    public AppLayoutBasic() {
+
+    //Servei d'accés a dades
+    CrmService service;
+
+    public AppLayoutBasic(CrmService service) {
+
+        this.service=service;
+
         DrawerToggle toggle = new DrawerToggle();
 
         H1 title = new H1("Raciones HC");
@@ -37,8 +45,8 @@ public class AppLayoutBasic extends AppLayout {
         Tabs tabs = new Tabs();
         tabs.add(
 //                createTab(VaadinIcon.DASHBOARD, "Ingestas", HCMainView.class),
-                createTab(VaadinIcon.DASHBOARD, "Ingestas", new HCMainView(null)),
-                createTab(VaadinIcon.GLASS, "Comidas"),
+                createTab(VaadinIcon.DASHBOARD, "Ingestas", new HCMainView(this.service)),
+                createTab(VaadinIcon.GLASS, "Comidas", new ListView(this.service)),
                 createTab(VaadinIcon.PACKAGE, "Alimentos"),
                 createTab(VaadinIcon.RECORDS, "Informes"),
                 createTab(VaadinIcon.LIST, "Acerca de...")
