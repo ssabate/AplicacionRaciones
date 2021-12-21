@@ -77,7 +77,7 @@ public class HCMainView extends VerticalLayout{
         hl2.add(nueva, guardar);
 
 //        add(menuBox(), hl1, hl2);
-        add(menuBox(), hl1, hl2);
+        add( hl1, hl2);
         setSizeFull();
     }
 
