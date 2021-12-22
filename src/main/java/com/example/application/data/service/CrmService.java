@@ -1,7 +1,6 @@
 package com.example.application.data.service;
 
 import com.example.application.data.entity.Alimento;
-import com.example.application.data.entity.Contact;
 import com.example.application.data.entity.Ingesta;
 import com.example.application.data.entity.TipoComida;
 import com.example.application.data.repository.AlimentoRepository;
@@ -111,6 +110,14 @@ public class CrmService {
 
     public Alimento findAllFoods(String value) {
         return null;
+    }
+
+    public void eliminarAlimento(Alimento food) {
+        aR.delete(food);
+    }
+
+    public void insertarAlimento(Alimento alimento) {
+        aR.save(alimento);
     }
 
 

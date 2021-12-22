@@ -1,12 +1,11 @@
 package com.example.application.views.list;
 
 import com.example.application.data.entity.Alimento;
-import com.example.application.data.entity.Contact;
-import com.example.application.data.entity.Ingesta;
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -22,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ListView extends VerticalLayout {
     Grid<Alimento> grid = new Grid<>(Alimento.class);
     TextField filterText = new TextField();
+    AlimentoForm form;
     CrmService service;
 
     @Autowired
@@ -30,24 +30,67 @@ public class ListView extends VerticalLayout {
         addClassName("list-view");
         setSizeFull();
         configureGrid();
+//        configureForm();
 
-        add(getToolbar(), grid);
-
-        setSizeFull();
+        add(getToolbar(), configureForm());
+//        add(getToolbar(), grid);
+        updateList();
+        closeEditor();
+        grid.asSingleSelect().addValueChangeListener(event ->
+                editFood(event.getValue()));
+//        setSizeFull();
     }
+
+    private FlexLayout configureForm() {
+        form = new AlimentoForm();
+        form.setWidth("25em");
+        form.addListener(AlimentoForm.SaveEvent.class, this::saveAlimento);
+        form.addListener(AlimentoForm.DeleteEvent.class, this::deleteAlimento);
+        form.addListener(AlimentoForm.CloseEvent.class, e -> closeEditor());
+
+//        Div content = new Div(grid, form);
+//        content.addClassName("content");
+//        content.setSizeFull();
+        FlexLayout content = new FlexLayout(grid, form);
+        content.setFlexGrow(2, grid);
+        content.setFlexGrow(1, form);
+        content.setFlexShrink(0, form);
+        content.addClassNames("content", "gap-m");
+        content.setSizeFull();
+        return content;
+    }
+
+    private void deleteAlimento(AlimentoForm.DeleteEvent evt) {
+        service.eliminarAlimento(evt.getAlimento());
+        updateList();
+        closeEditor();
+    }
+
+    private void saveAlimento(AlimentoForm.SaveEvent evt) {
+        service.insertarAlimento(evt.getAlimento());
+        updateList();
+        closeEditor();
+    }
+
     void addFood() {
         grid.asSingleSelect().clear();
         editFood(new Alimento());
     }
 
     public void editFood(Alimento food) {
-//        if (contact == null) {
-//            closeEditor();
-//        } else {
-//            form.setContact(contact);
-//            form.setVisible(true);
-//            addClassName("editing");
-//        }
+        if (food == null) {
+            closeEditor();
+        } else {
+            form.setAlimento(food);
+            form.setVisible(true);
+            addClassName("editing");
+        }
+    }
+
+    private void closeEditor() {
+        form.setAlimento(null);
+        form.setVisible(false);
+        removeClassName("editing");
     }
     private HorizontalLayout getToolbar() {
         filterText.setPlaceholder("Filtrar por nombre...");
@@ -71,7 +114,7 @@ public class ListView extends VerticalLayout {
 //        grid.addColumn(food -> food.getGrRacion()).setHeader("Gramos x ración");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 //        grid.setItems(service.findAllFoods(filterText.getValue()));
-        grid.setItems(service.findAllAlimentos(filterText.getValue()));
+//        grid.setItems(service.findAllAlimentos(filterText.getValue()));
 
 
         //Añado un menú contextual al grid
