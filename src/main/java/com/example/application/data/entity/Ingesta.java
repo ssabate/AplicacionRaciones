@@ -22,7 +22,7 @@ public class Ingesta extends AbstractEntity {
     private TipoComida comida;
 
     @NotNull
-    @ManyToOne//(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Alimento alimento;
 
 

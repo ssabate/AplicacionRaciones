@@ -5,6 +5,7 @@ import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -14,10 +15,20 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.security.PermitAll;
+
+//@Route(value="", layout = MainLayout.class)
+
+
+@Component
+@Scope("prototype")
 @Theme(themeFolder = "flowcrmtutorial")
-@PageTitle("Contacts | Vaadin CRM")
+@PageTitle("Alimentos | Vaadin CRM")
 @Route(value = "foods")
+@PermitAll
 public class ListView extends VerticalLayout {
     Grid<Alimento> grid = new Grid<>(Alimento.class);
     TextField filterText = new TextField();
@@ -61,9 +72,16 @@ public class ListView extends VerticalLayout {
     }
 
     private void deleteAlimento(AlimentoForm.DeleteEvent evt) {
-        service.eliminarAlimento(evt.getAlimento());
-        updateList();
-        closeEditor();
+        try {
+            service.eliminarAlimento(evt.getAlimento());
+            updateList();
+            closeEditor();
+        }catch(Exception e){
+        // When creating a notification using the `show` static method,
+// the duration is 5-sec by default.
+        Notification notification = Notification.show("¡Atención! Alimento usado en ingesta. No puede ser borrado");
+    }
+
     }
 
     private void saveAlimento(AlimentoForm.SaveEvent evt) {

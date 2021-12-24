@@ -6,12 +6,14 @@ import com.example.application.data.entity.TipoComida;
 import com.example.application.data.repository.AlimentoRepository;
 import com.example.application.data.repository.ContactRepository;
 import com.example.application.data.repository.IngestaRepository;
+import com.vaadin.flow.component.notification.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -113,11 +115,18 @@ public class CrmService {
     }
 
     public void eliminarAlimento(Alimento food) {
+        try{
         aR.delete(food);
+        }catch(Exception e){
+            // When creating a notification using the `show` static method,
+// the duration is 5-sec by default.
+            Notification notification = Notification.show("Alimento usado en ingesta no puede ser borrado");
+        }
     }
 
     public void insertarAlimento(Alimento alimento) {
         aR.save(alimento);
+//        aR.saveAll(Arrays.asList(alimento));
     }
 
 

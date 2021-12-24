@@ -11,14 +11,26 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class Alimento extends AbstractEntity {
 
-    @NotBlank
+//    @NotBlank
     private String nombre;
 
-    @NotEmpty
+//    @NotBlank
     private int grRacion;
 
     public Alimento(String nombre, int grRacion) {
         this.nombre = nombre;
+        this.grRacion = grRacion;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getGrRacion() {
+        return grRacion;
+    }
+
+    public void setGrRacion(int grRacion) {
         this.grRacion = grRacion;
     }
 
