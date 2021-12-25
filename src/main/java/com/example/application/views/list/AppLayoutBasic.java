@@ -12,6 +12,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Route("")
 // tag::snippet[]
@@ -22,6 +23,7 @@ public class AppLayoutBasic extends AppLayout {
     //Servei d'accés a dades
     CrmService service;
 
+    @Autowired
     public AppLayoutBasic(CrmService service) {
 
         this.service=service;

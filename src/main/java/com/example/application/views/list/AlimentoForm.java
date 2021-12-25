@@ -6,10 +6,8 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
@@ -30,9 +28,24 @@ public class AlimentoForm extends FormLayout {
 
     public AlimentoForm() {
         addClassName("contact-form");
+        //Miro que el nombre del alimento tenga más de 2 letras
+        binder.forField(nombre)
+                // Validator defined based on a lambda
+                // and an error message
+                .withValidator(
+                        name -> name.length() >= 2,
+                        "El nombre debe contener un mínimo de 2 caracteres.")
+                .withValidator(
+                        name -> !name.contains(".") && !name.contains(",") && !name.contains(":") &&
+                                !name.contains(";") && !name.contains("\"") && !name.contains("#"),
+                        "El nombre no puede contener . , : ; \" '")
+                .bind(Alimento::getNombre, Alimento::setNombre);
         binder.forField(grRacion)
                 .withConverter(
                         new StringToIntegerConverter("No es un número correcto"))
+                .withValidator(
+                        num -> num>=0,
+                        "El número no puede ser negativo")
                 .bind(Alimento::getGrRacion,
                         Alimento::setGrRacion);
         binder.bindInstanceFields(this);

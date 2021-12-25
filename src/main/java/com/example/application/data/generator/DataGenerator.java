@@ -1,9 +1,9 @@
 package com.example.application.data.generator;
 
-import com.example.application.data.entity.*;
+import com.example.application.data.entity.Alimento;
+import com.example.application.data.entity.Ingesta;
+import com.example.application.data.entity.TipoComida;
 import com.example.application.data.repository.*;
-import com.vaadin.exampledata.DataType;
-import com.vaadin.exampledata.ExampleDataGenerator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -70,6 +69,13 @@ public class DataGenerator {
                             new Alimento("Acompañamiento", 100),
                             new Alimento("Otros", 1))
                     );
+//            List<Alimento> alimentos = Arrays.asList(new Alimento("Pan", 20),
+//                            new Alimento("Leche", 200),
+//                            new Alimento("Verdura", 100),
+//                            new Alimento("Cerveza", 200),
+//                            new Alimento("Acompañamiento", 100),
+//                            new Alimento("Otros", 1))
+//                    ;
 
 //            List<Ingesta> ingestas = ingestaRepository
 //                    .saveAll(Stream.of("Pan", "Leche", "Verdura", "Cerveza", "Acompañamiento")
