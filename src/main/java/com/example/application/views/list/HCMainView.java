@@ -36,7 +36,7 @@ import java.time.LocalDate;
 @PWA(name = "My App", shortName = "My App")
 @Theme(themeFolder = "flowcrmtutorial")
 @PageTitle("Raciones | Vaadin CRM")
-@Route(value = "")
+@Route(value = "app-layout-basic")
 public class HCMainView extends VerticalLayout{
 
     //Components visuals
@@ -77,45 +77,45 @@ public class HCMainView extends VerticalLayout{
         hl2.add(nueva, guardar);
 
 //        add(menuBox(), hl1, hl2);
-        add(menuBox(), hl1, hl2);
+        add( hl1, hl2);
         setSizeFull();
     }
 
-    private Div menuBox() {
-        Div comp = new Div();
-        MenuBar menuBar = new MenuBar();
-        Text selected = new Text("");
-        ComponentEventListener<ClickEvent<MenuItem>> listener = e -> selected.setText(e.getSource().getText());
-        Div message = new Div(new Text("Clicked item: "), selected);
-
-        menuBar.addItem("View", listener);
-        menuBar.addItem("Edit", listener);
-
-        Image image = new Image("images/3_lines.png", "dummy image");
-        image.setWidth(5, Unit.PERCENTAGE);
-        image.setHeight(10, Unit.PERCENTAGE);
-        menuBar.addItem(image, listener);
-
-        MenuItem share = menuBar.addItem("Share");
-        SubMenu shareSubMenu = share.getSubMenu();
-        MenuItem onSocialMedia = shareSubMenu.addItem("On social media");
-        SubMenu socialMediaSubMenu = onSocialMedia.getSubMenu();
-        socialMediaSubMenu.addItem("Facebook", listener);
-        socialMediaSubMenu.addItem("Twitter", listener);
-        socialMediaSubMenu.addItem("Instagram", listener);
-        shareSubMenu.addItem("By email", listener);
-        shareSubMenu.addItem("Get Link", listener);
-
-        MenuItem move = menuBar.addItem("Move");
-        SubMenu moveSubMenu = move.getSubMenu();
-        moveSubMenu.addItem("To folder", listener);
-        moveSubMenu.addItem("To trash", listener);
-
-        menuBar.addItem("Duplicate", listener);
-
-        comp.add(menuBar, message);
-        return comp;
-    }
+//    private Div menuBox() {
+//        Div comp = new Div();
+//        MenuBar menuBar = new MenuBar();
+//        Text selected = new Text("");
+//        ComponentEventListener<ClickEvent<MenuItem>> listener = e -> selected.setText(e.getSource().getText());
+//        Div message = new Div(new Text("Clicked item: "), selected);
+//
+//        menuBar.addItem("View", listener);
+//        menuBar.addItem("Edit", listener);
+//
+//        Image image = new Image("images/3_lines.png", "dummy image");
+//        image.setWidth(5, Unit.PERCENTAGE);
+//        image.setHeight(10, Unit.PERCENTAGE);
+//        menuBar.addItem(image, listener);
+//
+//        MenuItem share = menuBar.addItem("Share");
+//        SubMenu shareSubMenu = share.getSubMenu();
+//        MenuItem onSocialMedia = shareSubMenu.addItem("On social media");
+//        SubMenu socialMediaSubMenu = onSocialMedia.getSubMenu();
+//        socialMediaSubMenu.addItem("Facebook", listener);
+//        socialMediaSubMenu.addItem("Twitter", listener);
+//        socialMediaSubMenu.addItem("Instagram", listener);
+//        shareSubMenu.addItem("By email", listener);
+//        shareSubMenu.addItem("Get Link", listener);
+//
+//        MenuItem move = menuBar.addItem("Move");
+//        SubMenu moveSubMenu = move.getSubMenu();
+//        moveSubMenu.addItem("To folder", listener);
+//        moveSubMenu.addItem("To trash", listener);
+//
+//        menuBar.addItem("Duplicate", listener);
+//
+//        comp.add(menuBar, message);
+//        return comp;
+//    }
 
     private void configureFecha() {
         datePicker.setValue(LocalDate.now());

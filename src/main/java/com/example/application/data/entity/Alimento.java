@@ -5,18 +5,32 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Data
 public class Alimento extends AbstractEntity {
 
-    @NotBlank
+//    @NotBlank
     private String nombre;
 
+//    @NotBlank
     private int grRacion;
 
     public Alimento(String nombre, int grRacion) {
         this.nombre = nombre;
+        this.grRacion = grRacion;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getGrRacion() {
+        return grRacion;
+    }
+
+    public void setGrRacion(int grRacion) {
         this.grRacion = grRacion;
     }
 
